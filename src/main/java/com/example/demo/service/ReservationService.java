@@ -6,6 +6,7 @@ import com.example.demo.entity.RentalLog;
 import com.example.demo.entity.Reservation;
 import com.example.demo.entity.User;
 import com.example.demo.enums.ReservationStatus;
+import com.example.demo.exception.ReservationConflictException;
 import com.example.demo.repository.ItemRepository;
 import com.example.demo.repository.ReservationRepository;
 import com.example.demo.repository.UserRepository;
@@ -35,20 +36,22 @@ public class ReservationService {
 
     // TODO: 1. 트랜잭션 이해
     @Transactional
-    public void createReservation(Long itemId, Long userId, LocalDateTime startAt, LocalDateTime endAt) {
+    public ReservationResponseDto createReservation(Long itemId, Long userId, LocalDateTime startAt, LocalDateTime endAt) {
         // 쉽게 데이터를 생성하려면 아래 유효성검사 주석 처리
-//        List<Reservation> haveReservations = reservationRepository.findConflictingReservations(itemId, startAt, endAt);
-//        if(!haveReservations.isEmpty()) {
-//            throw new ReservationConflictException("해당 물건은 이미 그 시간에 예약이 있습니다.");
-//        }
+        List<Reservation> haveReservations = reservationRepository.findConflictingReservations(itemId, startAt, endAt);
+        if(!haveReservations.isEmpty()) {
+            throw new ReservationConflictException("해당 물건은 이미 그 시간에 예약이 있습니다.");
+        }
 
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new IllegalArgumentException("해당 ID에 맞는 값이 존재하지 않습니다."));
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 ID에 맞는 값이 존재하지 않습니다."));
         Reservation reservation = new Reservation(item, user, ReservationStatus.PENDING, startAt, endAt);
         Reservation savedReservation = reservationRepository.save(reservation);
 
-        RentalLog rentalLog = new RentalLog(savedReservation, "로그 메세지", "CREATE");
+        RentalLog rentalLog = new RentalLog(savedReservation, "예약 완료", "CREATE");
         rentalLogService.save(rentalLog);
+
+        return ReservationResponseDto.toDto(savedReservation);
     }
 
     // TODO: 3. N+1 문제
@@ -110,23 +113,26 @@ public class ReservationService {
     public void updateReservationStatus(Long reservationId, ReservationStatus status) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("해당 ID에 맞는 데이터가 존재하지 않습니다."));
 
-        if (ReservationStatus.APPROVED.equals(status)) {
-            if (!ReservationStatus.PENDING.equals(reservation.getStatus())) {
-                throw new IllegalArgumentException("PENDING 상태만 APPROVED로 변경 가능합니다.");
-            }
-            reservation.updateStatus(ReservationStatus.APPROVED);
-        } else if (ReservationStatus.CANCELED.equals(status)) {
-            if (ReservationStatus.EXPIRED.equals(reservation.getStatus())) {
-                throw new IllegalArgumentException("EXPIRED 상태인 예약은 취소할 수 없습니다.");
-            }
-            reservation.updateStatus(ReservationStatus.CANCELED);
-        } else if (ReservationStatus.EXPIRED.equals(status)) {
-            if (!ReservationStatus.PENDING.equals(reservation.getStatus())) {
-                throw new IllegalArgumentException("PENDING 상태만 EXPIRED로 변경 가능합니다.");
-            }
-            reservation.updateStatus(ReservationStatus.EXPIRED);
-        } else {
-            throw new IllegalArgumentException("올바르지 않은 상태: " + status);
+        ReservationStatus currentStatus = reservation.getStatus();
+
+        switch (status) {
+            case ReservationStatus.APPROVED:
+                if (!ReservationStatus.PENDING.equals(currentStatus)) {
+                    throw new IllegalArgumentException("PENDING 상태만 APPROVED로 변경 가능합니다.");
+                }
+                break;
+            case ReservationStatus.CANCELED:
+                if (ReservationStatus.EXPIRED.equals(currentStatus)) {
+                    throw new IllegalArgumentException("EXPIRED 상태인 예약은 취소할 수 없습니다.");
+                }
+                break;
+            case ReservationStatus.EXPIRED:
+                if (!ReservationStatus.PENDING.equals(currentStatus)) {
+                    throw new IllegalArgumentException("PENDING 상태만 EXPIRED로 변경 가능합니다.");
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("올바르지 않은 상태: " + status);
         }
     }
 }
