@@ -5,7 +5,6 @@ import com.example.demo.entity.Item;
 import com.example.demo.entity.RentalLog;
 import com.example.demo.entity.Reservation;
 import com.example.demo.entity.User;
-import com.example.demo.exception.ReservationConflictException;
 import com.example.demo.repository.ItemRepository;
 import com.example.demo.repository.ReservationRepository;
 import com.example.demo.repository.UserRepository;
@@ -14,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -55,6 +53,7 @@ public class ReservationService {
     // TODO: 3. N+1 문제
     public List<ReservationResponseDto> getReservations() {
         List<Reservation> reservations = reservationRepository.findAll();
+//        List<Reservation> reservations = reservationRepository.findAllWithFetch();
 
         return reservations.stream().map(reservation -> {
             User user = reservation.getUser();

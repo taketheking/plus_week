@@ -1,8 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.ReservationRequestDto;
+import com.example.demo.dto.ReservationResponseDto;
 import com.example.demo.service.ReservationService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/reservations")
@@ -27,8 +30,8 @@ public class ReservationController {
     }
 
     @GetMapping
-    public void findAll() {
-        reservationService.getReservations();
+    public List<ReservationResponseDto> findAll() {
+        return reservationService.getReservations();
     }
 
     @GetMapping("/search")
