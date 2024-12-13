@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 
 @Getter
 public class ReservationResponseDto {
-    private Long id;
-    private String nickname;
-    private String itemName;
-    private LocalDateTime startAt;
-    private LocalDateTime endAt;
-    private ReservationStatus status;
+    private final Long id;
+    private final String nickname;
+    private final String itemName;
+    private final LocalDateTime startAt;
+    private final LocalDateTime endAt;
+    private final ReservationStatus status;
 
     public ReservationResponseDto(Long id, String nickname, String itemName, LocalDateTime startAt, LocalDateTime endAt, ReservationStatus status) {
         this.id = id;

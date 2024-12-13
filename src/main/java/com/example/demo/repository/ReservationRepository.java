@@ -1,8 +1,6 @@
 package com.example.demo.repository;
 
-import com.example.demo.dto.ReservationResponseDto;
 import com.example.demo.entity.Reservation;
-import com.example.demo.entity.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,12 +10,11 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RepositoryDefinition(domainClass = Reservation.class, idClass = Integer.class)
 public interface ReservationRepository extends JpaRepository<Reservation, Long>, ReservationRepositoryQuery {
-//
+
 //    List<Reservation> findByUserIdAndItemId(Long userId, Long itemId);
 //
 //    List<Reservation> findByUserId(Long userId);
