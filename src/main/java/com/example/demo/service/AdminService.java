@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AdminService {
@@ -18,12 +19,15 @@ public class AdminService {
     // TODO: 4. find or save 예제 개선
     @Transactional
     public void reportUsers(List<Long> userIds) {
-        for (Long userId : userIds) {
-            User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 ID에 맞는 값이 존재하지 않습니다."));
 
-            user.updateStatusToBlocked();
+//        List<User> users = userRepository.findAllById(userIds).stream().toList();
+//
+//        if(users.isEmpty()) {
+//            throw new IllegalArgumentException("해당 ID에 맞는 값이 존재하지 않습니다.");
+//        }
 
-            userRepository.save(user);
-        }
+        // 위의 user 조회가 없어도 동작함
+        // 해당 id의 레코드가 없어도 실행됨
+        userRepository.updateStatusByIds("BLOCKED", userIds);
     }
 }
