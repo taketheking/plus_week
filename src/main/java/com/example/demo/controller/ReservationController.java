@@ -35,8 +35,8 @@ public class ReservationController {
     }
 
     @GetMapping("/search")
-    public void searchAll(@RequestParam(required = false) Long userId,
-                          @RequestParam(required = false) Long itemId) {
-        reservationService.searchAndConvertReservations(userId, itemId);
+    public List<ReservationResponseDto> searchAll(@RequestParam(required = false) Long userId,
+                                                  @RequestParam(required = false) Long itemId) {
+        return reservationService.searchAndConvertReservations(userId, itemId);
     }
 }

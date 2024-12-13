@@ -5,6 +5,7 @@ import com.example.demo.entity.Reservation;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.RepositoryDefinition;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,13 +14,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ReservationRepository extends JpaRepository<Reservation, Long> {
-
-    List<Reservation> findByUserIdAndItemId(Long userId, Long itemId);
-
-    List<Reservation> findByUserId(Long userId);
-
-    List<Reservation> findByItemId(Long itemId);
+@RepositoryDefinition(domainClass = Reservation.class, idClass = Integer.class)
+public interface ReservationRepository extends JpaRepository<Reservation, Long>, ReservationRepositoryQuery {
+//
+//    List<Reservation> findByUserIdAndItemId(Long userId, Long itemId);
+//
+//    List<Reservation> findByUserId(Long userId);
+//
+//    List<Reservation> findByItemId(Long itemId);
 
     @Query("SELECT r FROM Reservation r " +
             "WHERE r.item.id = :id " +
