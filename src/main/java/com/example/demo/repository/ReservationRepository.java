@@ -2,6 +2,7 @@ package com.example.demo.repository;
 
 import com.example.demo.dto.ReservationResponseDto;
 import com.example.demo.entity.Reservation;
+import com.example.demo.entity.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,6 +23,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
 //    List<Reservation> findByUserId(Long userId);
 //
 //    List<Reservation> findByItemId(Long itemId);
+
+    default Reservation findByIdOrElseThrow(Long id) {
+        return findById(id).orElseThrow(() -> new IllegalArgumentException("해당 ID에 맞는 값이 존재하지 않습니다."));
+    }
 
     @Query("SELECT r FROM Reservation r " +
             "WHERE r.item.id = :id " +

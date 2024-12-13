@@ -14,6 +14,10 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
 
+    default User findByIdOrElseThrow(Long id) {
+        return findById(id).orElseThrow(() -> new IllegalArgumentException("해당 ID에 맞는 값이 존재하지 않습니다."));
+    }
+
     @Modifying(clearAutomatically = true)
     @Query("UPDATE User u SET u.status = :status where u.id IN :userIds")
     int updateStatusByIds(@Param("status") UserStatus status, @Param("userIds") List<Long> userIds);
