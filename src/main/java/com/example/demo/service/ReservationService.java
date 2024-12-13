@@ -134,5 +134,9 @@ public class ReservationService {
             default:
                 throw new IllegalArgumentException("올바르지 않은 상태: " + status);
         }
+
+        // status 상태 변경
+        reservation.updateStatus(status);
+
     }
 }
