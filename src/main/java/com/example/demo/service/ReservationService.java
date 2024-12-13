@@ -110,7 +110,7 @@ public class ReservationService {
 
     // TODO: 7. 리팩토링
     @Transactional
-    public void updateReservationStatus(Long reservationId, ReservationStatus status) {
+    public ReservationResponseDto updateReservationStatus(Long reservationId, ReservationStatus status) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("해당 ID에 맞는 데이터가 존재하지 않습니다."));
 
         ReservationStatus currentStatus = reservation.getStatus();
@@ -138,5 +138,8 @@ public class ReservationService {
         // status 상태 변경
         reservation.updateStatus(status);
 
+        reservationRepository.save(reservation);
+
+        return ReservationResponseDto.toDto(reservation);
     }
 }
