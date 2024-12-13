@@ -59,18 +59,7 @@ public class ReservationService {
         List<Reservation> reservations = reservationRepository.findAll();
 //        List<Reservation> reservations = reservationRepository.findAllWithFetch();
 
-        return reservations.stream().map(reservation -> {
-            User user = reservation.getUser();
-            Item item = reservation.getItem();
-
-            return new ReservationResponseDto(
-                    reservation.getId(),
-                    user.getNickname(),
-                    item.getName(),
-                    reservation.getStartAt(),
-                    reservation.getEndAt()
-            );
-        }).toList();
+        return reservations.stream().map(ReservationResponseDto::toDto).toList();
     }
 
     // TODO: 5. QueryDSL 검색 개선
@@ -98,13 +87,7 @@ public class ReservationService {
 
     private List<ReservationResponseDto> convertToDto(List<Reservation> reservations) {
         return reservations.stream()
-                .map(reservation -> new ReservationResponseDto(
-                        reservation.getId(),
-                        reservation.getUser().getNickname(),
-                        reservation.getItem().getName(),
-                        reservation.getStartAt(),
-                        reservation.getEndAt()
-                ))
+                .map(ReservationResponseDto::toDto)
                 .toList();
     }
 
