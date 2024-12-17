@@ -9,6 +9,7 @@ import org.hibernate.annotations.DynamicInsert;
 @Getter
 // TODO: 6. Dynamic Insert
 @DynamicInsert
+@Table(name = "item")
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,4 +38,11 @@ public class Item {
     }
 
     public Item() {}
+
+    @PrePersist
+    public void prePersist() {
+        if (status == null) {
+            status = "PENDING";  // status가 null이면 'PENDING'으로 설정
+        }
+    }
 }
