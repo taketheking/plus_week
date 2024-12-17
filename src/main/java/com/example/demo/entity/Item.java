@@ -35,14 +35,10 @@ public class Item {
         this.description = description;
         this.manager = manager;
         this.owner = owner;
+        this.status = "PENDING";
     }
 
-    public Item() {}
-
-    @PrePersist
-    public void prePersist() {
-        if (status == null) {
-            status = "PENDING";  // status가 null이면 'PENDING'으로 설정
-        }
+    public Item() {
+        this.status = "PENDING";
     }
 }
