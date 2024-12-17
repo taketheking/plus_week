@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Entity
 @Getter
 @DynamicUpdate
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,8 +24,8 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private Role role = Role.USER;
 
-    public User(String role, String email, String nickname, String password) {
-        this.role = Role.of(role);
+    public User(Role role, String email, String nickname, String password) {
+        this.role = role;
         this.email = email;
         this.nickname = nickname;
         this.password = password;
