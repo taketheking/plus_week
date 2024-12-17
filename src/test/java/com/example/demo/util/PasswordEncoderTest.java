@@ -1,13 +1,9 @@
 package com.example.demo.util;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 class PasswordEncoderTest {
 
@@ -29,11 +25,6 @@ class PasswordEncoderTest {
         // encoding 된 password 와 pw가 같은 비밀번호를 가리키는 지 확인
         assertTrue(PasswordEncoder.matches(pw, encodedPassword), "비밀번호가 일치합니다.");
 
-
-            // Bcrypt를 Mock 객체로 하고 싶을 때
-//        try(MockedStatic<BCrypt> mockedStaticBCrypt = Mockito.mockStatic(BCrypt.class)){
-//
-//        }
     }
 
 }
