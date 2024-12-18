@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.ItemRequestDto;
 import com.example.demo.dto.ItemResponseDto;
-import com.example.demo.dto.UserRequestDto;
 import com.example.demo.entity.Item;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
