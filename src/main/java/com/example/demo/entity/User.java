@@ -8,7 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Entity
 @Getter
 @DynamicUpdate
-@Table(name = "user")
+@Table(name = "app_user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

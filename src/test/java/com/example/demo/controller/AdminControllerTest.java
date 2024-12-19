@@ -6,6 +6,7 @@ import com.example.demo.dto.ReportRequestDto;
 import com.example.demo.entity.Role;
 import com.example.demo.service.AdminService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -60,6 +62,25 @@ class AdminControllerTest {
                 .andExpect(status().isOk())  //then
                 .andExpect(content().string("10"))
         .andDo(print());
+
+    }
+
+    @Test
+    @DisplayName("admin 권한 확인 예외 테스트")
+    void reportUsersExceptionTest() {
+        //given
+        MockHttpSession session = new MockHttpSession();
+        Authentication authentication = new Authentication(1L, Role.USER);
+        session.setAttribute(GlobalConstants.USER_AUTH, authentication);
+
+        // when
+        assertThrows(AssertionError.class, () ->
+        mockMvc.perform(post("/admins/report-users")
+                        .session(session)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())  //then
+        );
 
     }
 
